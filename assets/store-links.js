@@ -1,11 +1,11 @@
 /**
  * Permanent store destinations for the Metamaterials 2026 conference app.
  *
- * Leave a value empty while that app is unpublished. When a listing is live,
- * paste its complete HTTPS store URL between the quotation marks and deploy
- * this same site again.
+ * These temporary destinations open store searches for the conference name.
+ * When a listing is live, replace the corresponding value with its complete
+ * official store URL and deploy this same site again.
  */
 export const STORE_URLS = Object.freeze({
-  ios: "",
-  android: "",
+  ios: "itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/search?term=Metamaterials%202026",
+  android: "https://play.google.com/store/search?q=Metamaterials%202026&c=apps",
 });

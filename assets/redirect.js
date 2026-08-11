@@ -1,8 +1,13 @@
 import { STORE_URLS } from "./store-links.js";
 
-const ALLOWED_HOSTS = Object.freeze({
-  ios: "apps.apple.com",
-  android: "play.google.com",
+const ALLOWED_DESTINATIONS = Object.freeze({
+  ios: Object.freeze([
+    Object.freeze({ protocol: "https:", hostname: "apps.apple.com" }),
+    Object.freeze({ protocol: "itms-apps:", hostname: "itunes.apple.com" }),
+  ]),
+  android: Object.freeze([
+    Object.freeze({ protocol: "https:", hostname: "play.google.com" }),
+  ]),
 });
 
 /**
@@ -10,18 +15,22 @@ const ALLOWED_HOSTS = Object.freeze({
  * destination is blank, malformed, insecure, or points to the wrong host.
  */
 export function getStoreDestination(platform, storeUrls = STORE_URLS) {
-  const expectedHost = ALLOWED_HOSTS[platform];
+  const allowedDestinations = ALLOWED_DESTINATIONS[platform];
   const candidate = storeUrls?.[platform];
 
-  if (!expectedHost || typeof candidate !== "string" || candidate.trim() === "") {
+  if (!allowedDestinations || typeof candidate !== "string" || candidate.trim() === "") {
     return null;
   }
 
   try {
     const destination = new URL(candidate.trim());
+    const hasAllowedDestination = allowedDestinations.some(
+      (allowed) =>
+        destination.protocol === allowed.protocol &&
+        destination.hostname === allowed.hostname,
+    );
     const isAllowed =
-      destination.protocol === "https:" &&
-      destination.hostname === expectedHost &&
+      hasAllowedDestination &&
       destination.username === "" &&
       destination.password === "" &&
       destination.port === "";
